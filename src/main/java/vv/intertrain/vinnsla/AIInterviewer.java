@@ -1,13 +1,7 @@
 package vv.intertrain.vinnsla;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
