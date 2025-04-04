@@ -1,5 +1,5 @@
 # InterTrain
 
-## Gervigreindar viðtalsþjálfi
+### Gervigreindar viðtalsþjálfi
 
-### Eftir Viktor og Viktor
+Eftir Viktor og Viktor
