@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="vv.intertrain.vidmot.VidtalController"
+      spacing="20"
+      style="-fx-background-color: white; -fx-padding: 20;">
+
+    <fx:include source="chatbox.fxml" fx:id="chatBox"/>
+
+    <TextField fx:id="inntak" onAction="#onSenda" minWidth="300"/>
+    <HBox spacing="20" alignment="CENTER_RIGHT">
+        <Button text="Endurstilla" onAction="#onEndurstilla"/>
+        <Button text="Til baka" onAction="#onTilBaka"/>
+        <Button text="Hætta" onAction="#onKvedja"/>
+    </HBox>
+</VBox>

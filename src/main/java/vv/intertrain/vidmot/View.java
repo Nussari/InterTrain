@@ -6,7 +6,7 @@ package vv.intertrain.vidmot;
  */
 public enum View {
     VELKOMINN("velkominn-view.fxml"),
-    SPURNINGAR("spurningar-view.fxml"),
+    VIDTAL("vidtal-view.fxml"),
     KVEDJA("kvedja-view.fxml");
 
     private final String fileName;
