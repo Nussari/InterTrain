@@ -44,12 +44,13 @@ public class VelkominnController {
     /**
      * Skiptir yfir í spurningaviðmótið
      */
-    public void onAefa(ActionEvent ignored) {
-        ViewSwitcher.switchTo(View.SPURNINGAR, true);
-    }
+    public void onAefa(ActionEvent ignored) { ViewSwitcher.switchTo(View.VIDTAL, true); }
 
+    /**
+     * BREYTA ÞEGAR UNDIRBUNINGS SIÐA KEMUR
+     */
     public void onUndirbua(ActionEvent ignored) {
-        ViewSwitcher.switchTo(View.SPURNINGAR, true);
+        ViewSwitcher.switchTo(View.VIDTAL, true);
     }
 
     /**
