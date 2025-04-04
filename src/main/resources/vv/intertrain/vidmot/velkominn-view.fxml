@@ -3,22 +3,56 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="169.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vv.intertrain.vidmot.VelkominnController">
-    <children>
-        <Label fx:id="welcomeText" alignment="CENTER" layoutX="20.0" layoutY="62.0" prefHeight="29.0" prefWidth="265.0" text="Velkomin í viðtalsþjálfann">
-            <font>
-                <Font size="18.0" />
-            </font></Label>
-        <ButtonBar layoutX="55.0" layoutY="97.0" prefHeight="40.0" prefWidth="185.0">
-            <buttons>
-                <Button onAction="#onSpurningar" text="Spurningar" />
-                <Button mnemonicParsing="false" onAction="#onKvedja" text="Hætta" />
-            </buttons>
-            <padding>
-                <Insets right="15.0" />
-            </padding>
-        </ButtonBar>
-    </children>
-</AnchorPane>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="vv.intertrain.vidmot.VelkominnController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="InterTrain"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <VBox spacing="10" alignment="CENTER_LEFT">
+        <VBox spacing="5">
+            <Label text="Nafn:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="nafn"
+                       promptText="Þitt nafn"
+                       minWidth="300"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Fyrirtæki (valkvætt):" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="fyrirtaeki"
+                       promptText="Nafn á fyrirtæki"
+                       minWidth="300"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Starfsheiti*:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="starf"
+                       promptText="Nafn á starfi"
+                       minWidth="300"/>
+        </VBox>
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button fx:id="undirbua"
+                text="Undirbúa fyrir viðtal"
+                style="-fx-base: #dddddd;"
+                disable="true"
+                onAction="#onUndirbua"/>
+
+        <Button fx:id="aefa"
+                text="Æfingar viðtal"
+                style="-fx-base: #dddddd;"
+                disable="true"
+                onAction="#onAefa"/>
+
+        <Button fx:id="quit"
+                text="Hætta"
+                style="-fx-base: #dddddd;"
+                onAction="#onKvedja"/>
+    </HBox>
+
+</VBox>
