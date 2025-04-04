@@ -24,7 +24,7 @@ public class InterviewApplication extends Application {
         Scene s = new Scene (new Pane(), 600, 600);
         ViewSwitcher.setScene(s);
         ViewSwitcher.switchTo(View.VELKOMINN, true);
-        stage.setTitle("Viðtalsþjálfinn");
+        stage.setTitle("InterTrain");
         stage.setScene(s);
         stage.show();
     }
