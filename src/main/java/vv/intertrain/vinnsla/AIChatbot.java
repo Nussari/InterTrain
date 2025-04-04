@@ -1,6 +1,5 @@
 package vv.intertrain.vinnsla;
 
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -10,15 +9,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AIChatbot {
     //private static final String API_KEY = System.getenv("API_KEY");
     private static final String API_KEY = "";
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
     private final ObjectMapper objectMapper;
-    private final List<String> conversationHistory = new ArrayList<>();
 
     public AIChatbot() {
         this.objectMapper = new ObjectMapper();
@@ -80,16 +76,6 @@ public class AIChatbot {
         String rawText = contentNode.asText();
 
         // Remove markdown-style code block markers (```json ... ```)
-
         return rawText.replaceAll("(?s)^```json\\s*", "").replaceAll("(?s)```\\s*$", "").trim();
     }
 }
-
-
-
-
-// Gögn sem við sendum
-
-// Nafn, vinnustað (gerð?), starfsheiti
-
-// Vera með einn klasa fyrir interface við API og annan fyrir AIInterview?
