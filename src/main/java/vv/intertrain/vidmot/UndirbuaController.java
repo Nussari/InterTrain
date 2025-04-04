@@ -3,14 +3,14 @@ package vv.intertrain.vidmot;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class VidtalController {
+public class UndirbuaController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
 
     @FXML
     public void initialize() {
         // Breyta þessu þegar AI klasi er tilbúinn
-        chatBoxController.nyttSkilabod("Velkominn í viðtalið", false);
+        chatBoxController.nyttSkilabod("Undirbúningur fyrir viðtal:", false);
     }
 
     public void onSenda(){

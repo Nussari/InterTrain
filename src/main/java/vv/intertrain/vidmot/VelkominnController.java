@@ -50,7 +50,7 @@ public class VelkominnController {
      * BREYTA ÞEGAR UNDIRBUNINGS SIÐA KEMUR
      */
     public void onUndirbua(ActionEvent ignored) {
-        ViewSwitcher.switchTo(View.VIDTAL, true);
+        ViewSwitcher.switchTo(View.UNDIRBUA, true);
     }
 
     /**
