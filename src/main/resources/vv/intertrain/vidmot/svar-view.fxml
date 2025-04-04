@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane prefHeight="400.0" prefWidth="600.0" stylesheets="@CSS/interTrain.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <children>
+                <Label fx:id="fxSpurning" prefHeight="17.0" prefWidth="580.0" text="Spurningin kemur hér" />
+                <TextField fx:id="fxSvar" onAction="#faFeedback" prefHeight="17.0" prefWidth="580.0" text="Svaraðu hér" />
+                <ScrollPane prefHeight="64.0" prefWidth="580.0">
+                    <content>
+                        <Label fx:id="fxFeedback" prefHeight="17.0" prefWidth="580.0" text="Feedback kemur hér" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </content>
+    <ButtonType fx:id="fxILagi" buttonData="OK_DONE" text="Í lagi" />
+    <ButtonType fx:id="fxHaettaVid" buttonData="CANCEL_CLOSE" text="Hætta við" />
+</DialogPane>
