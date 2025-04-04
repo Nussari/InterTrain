@@ -10,7 +10,7 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="InterTrain"
+    <Label text="InterTrain - undirbúðu þig fyrir starfsviðtal"
            style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
     <VBox spacing="10" alignment="CENTER_LEFT">
@@ -29,7 +29,7 @@
         </VBox>
 
         <VBox spacing="5">
-            <Label text="Starfsheiti*:" style="-fx-font-weight: bold;"/>
+            <Label text="Starfsheiti:" style="-fx-font-weight: bold;"/>
             <TextField fx:id="starf"
                        promptText="Nafn á starfi"
                        minWidth="300"/>
@@ -49,7 +49,7 @@
                 disable="true"
                 onAction="#onAefa"/>
 
-        <Button fx:id="quit"
+        <Button
                 text="Hætta"
                 style="-fx-base: #dddddd;"
                 onAction="#onKvedja"/>

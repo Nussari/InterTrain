@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 public class VelkominnController {
     @FXML private TextField nafn;
     @FXML private TextField starf;
+    @FXML private TextField fyrirtaeki;
     @FXML private Button undirbua;
     @FXML private Button aefa;
 
