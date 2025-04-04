@@ -3,11 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+
+<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="vv.intertrain.vidmot.UndirbuaController"
       spacing="20"
-      style="-fx-background-color: white; -fx-padding: 20;">
+      styleClass="site-container">
 
     <fx:include source="chatbox.fxml" fx:id="chatBox"/>
 
@@ -17,4 +19,7 @@
         <Button text="Til baka" onAction="#onTilBaka"/>
         <Button text="Hætta" onAction="#onKvedja"/>
     </HBox>
+    <stylesheets>
+        <URL value="@CSS/style.css" />
+    </stylesheets>
 </VBox>

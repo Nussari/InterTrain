@@ -1,9 +1,0 @@
-.label {
--fx-border-color: grey;
--fx-font-size: 14;
--fx-padding: 10;
-}
-
-.list-cell:odd {
-    -fx-background-color: lightgrey;
-}

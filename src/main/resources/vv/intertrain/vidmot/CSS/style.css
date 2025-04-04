@@ -1,3 +1,33 @@
+/*-- General --*/
+
+.titill {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+
+.merking {
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+button {
+    -fx-base: #dddddd;
+}
+
+.list-cell:odd {
+    -fx-background-color: lightgrey;
+}
+
+.site-container {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}
+
+
+/*-- Chatbox --*/
+
 .chat-scroll-pane {
     -fx-background: #f5f5f5;
     -fx-border-color: #ddd;
