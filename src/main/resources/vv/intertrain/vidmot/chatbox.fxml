@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="vv.intertrain.vidmot.ChatboxController"
+            fx:id="scrollPane"
+            styleClass="chat-scroll-pane"
+            fitToWidth="true"
+            prefHeight="500"
+            maxHeight="500"
+            hbarPolicy="NEVER">
+
+    <VBox fx:id="skilabod"
+          spacing="10"
+          styleClass="skilabod-container"/>
+
+    <stylesheets>
+        <URL value="@CSS/chat.css" />
+    </stylesheets>
+
+</ScrollPane>
