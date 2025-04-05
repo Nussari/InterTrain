@@ -133,6 +133,5 @@ public class GeminiChatSession {
 
     public static void main(String[] args) {
 
-        GeminiChatSession gc = new GeminiChatSession("AIzaSyCaM0yMlHoGwTuM82d-gvELjmMqG58sk1k");
     }
 }
