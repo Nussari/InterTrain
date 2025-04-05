@@ -19,7 +19,6 @@
           styleClass="skilabod-container"/>
 
     <stylesheets>
-        <URL value="@CSS/chat.css" />
+        <URL value="@CSS/style.css" />
     </stylesheets>
-
 </ScrollPane>

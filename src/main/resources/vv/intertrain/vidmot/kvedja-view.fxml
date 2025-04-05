@@ -2,15 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="169.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vv.intertrain.vidmot.KvedjaController">
-    <children>
-
-        <Label  alignment="CENTER" layoutX="20.0" layoutY="62.0" prefHeight="29.0" prefWidth="265.0" text="Gangi þér vel í viðtalinu ">
-            <font>
-                <Font size="18.0" />
-            </font></Label>
-        <Button  onAction="#onQuit" layoutX="88.0" layoutY="105.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Hætta" />
-    </children>
-</AnchorPane>
+<?import java.net.URL?>
+<VBox prefHeight="169.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vv.intertrain.vidmot.KvedjaController" spacing="20" styleClass="site-container">
+    <Label  alignment="CENTER" prefHeight="29.0" prefWidth="265.0" text="Gangi þér vel í viðtalinu" styleClass="titill"/>
+    <HBox alignment="CENTER">
+        <Button alignment="CENTER" onAction="#onQuit" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Hætta" />
+    </HBox>
+    <stylesheets>
+        <URL value="@CSS/style.css" />
+    </stylesheets>
+</VBox>
