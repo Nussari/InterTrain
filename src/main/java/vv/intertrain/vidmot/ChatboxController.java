@@ -30,7 +30,7 @@ public class ChatboxController {
         }));
     }
 
-    public void nyttSkilabod(String texti, boolean notandi) {
+    public void nySkilabod(String texti, boolean notandi) {
         HBox textaBubbla = nyBubbla(texti, notandi);
         skilabod.getChildren().add(textaBubbla);
     }

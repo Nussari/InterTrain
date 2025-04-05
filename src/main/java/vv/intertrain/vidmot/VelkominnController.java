@@ -44,7 +44,13 @@ public class VelkominnController {
     /**
      * Skiptir yfir í spurningaviðmótið
      */
-    public void onAefa(ActionEvent ignored) { ViewSwitcher.switchTo(View.VIDTAL, true); }
+    public void onAefa(ActionEvent ignored) {
+        VidtalController.setNafn(nafn.getText());
+        VidtalController.setStarf(starf.getText());
+        VidtalController.setFyrirtaeki(fyrirtaeki.getText());
+
+        ViewSwitcher.switchTo(View.VIDTAL, true);
+    }
 
     /**
      * BREYTA ÞEGAR UNDIRBUNINGS SIÐA KEMUR
@@ -59,6 +65,4 @@ public class VelkominnController {
     public void onKvedja(ActionEvent ignored) {
         ViewSwitcher.switchTo(View.KVEDJA, true);
     }
-
-
 }

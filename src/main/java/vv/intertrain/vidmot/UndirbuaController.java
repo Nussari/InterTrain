@@ -10,18 +10,18 @@ public class UndirbuaController {
     @FXML
     public void initialize() {
         // Breyta þessu þegar AI klasi er tilbúinn
-        chatBoxController.nyttSkilabod("Undirbúningur fyrir viðtal:", false);
+        chatBoxController.nySkilabod("Undirbúningur fyrir viðtal:", false);
     }
 
     public void onSenda(){
-        chatBoxController.nyttSkilabod(inntak.getText(), true);
+        chatBoxController.nySkilabod(inntak.getText(), true);
         inntak.clear();
     }
 
     public void onEndurstilla() {
         chatBoxController.clear();
         // Breyta þessu þegar AI klasi er tilbúinn
-        chatBoxController.nyttSkilabod("Velkominn", false);
+        chatBoxController.nySkilabod("Velkominn", false);
     }
 
     public void onTilBaka() {

@@ -5,7 +5,8 @@ import java.util.Scanner;
 public class InterviewBot {
 
     // Config
-    private final int MAX_QUESTIONS = 4;
+    private static final int DEFAULT_MAX_QUESTIONS = 10;
+    private final int MAX_QUESTIONS;
 
     // Job information
     private String name;
@@ -20,23 +21,35 @@ public class InterviewBot {
 
     // Interview status, true if ongoing, false if finished
     private Boolean isActive;
-
+    // Total amount of questions asked so far
     private int questionCount;
 
-
-
-    public InterviewBot(String name, String company, String jobTitle) {
+    public InterviewBot(String name, String company, String jobTitle, int maxQuestionCount) {
         this.name = name;
         this.company = company;
         this.jobTitle = jobTitle;
-        this.chatSession = new GeminiChatSession(API_KEY);
+        this.chatSession = new GeminiChatSession();
         this.initialPrompt = createInitialPrompt();
         this.isActive = true;
         this.questionCount = -1;
+
+        if (maxQuestionCount <= 0) {
+            this.MAX_QUESTIONS = DEFAULT_MAX_QUESTIONS;
+        } else {
+            this.MAX_QUESTIONS = maxQuestionCount;
+        }
+    }
+
+    public InterviewBot(String name, String company, String jobTitle) {
+        this(name, company, jobTitle, DEFAULT_MAX_QUESTIONS);
+    }
+
+    public InterviewBot(String name, String jobTitle, int maxQuestionCount) {
+        this(name, "", jobTitle, maxQuestionCount);
     }
 
     public InterviewBot(String name, String jobTitle) {
-        this(name, "", jobTitle);
+        this(name, "", jobTitle, DEFAULT_MAX_QUESTIONS);
     }
 
     private String createInitialPrompt() {
@@ -47,7 +60,8 @@ public class InterviewBot {
                         "2. After exactly %d questions or when the candidate says 'end', provide feedback with:\n" +
                         "   - 3 specific strengths from their answers\n" +
                         "   - 3 concrete areas for improvement\n" +
-                        "   - Reference their actual responses in your feedback",
+                        "   - Reference their actual responses in your feedback. " +
+                        "MAKE SURE TO LET THE CANDIDATE ANSWER, DO NOT ASK ALL QUESTIONS AT ONCE, ALSO DO NOT EXPLICITLY LET THE USER KNOW. SPEAK ICELANDIC",
                 name,
                 jobTitle,
                 company,
@@ -70,6 +84,7 @@ public class InterviewBot {
         if (this.questionCount >= MAX_QUESTIONS) {
             this.feedbackTriggerPrompt = "The interview is now complete. Please provide the feedback as specified in the initial instructions.";
             this.feedback = chatSession.sendAndReceiveMsg(feedbackTriggerPrompt);
+            System.out.println(this.feedback);
 
             this.isActive = false;
             return this.feedback;
@@ -95,7 +110,7 @@ public class InterviewBot {
 
         System.out.println(greeting);
 
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= 4; i++) {
             System.out.println("Your answer: ");
 
             String inntak = scanner.nextLine().trim();
