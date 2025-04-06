@@ -45,9 +45,9 @@ public class VelkominnController {
      * Skiptir yfir í spurningaviðmótið
      */
     public void onAefa(ActionEvent ignored) {
-        VidtalController.setNafn(nafn.getText());
-        VidtalController.setStarf(starf.getText());
-        VidtalController.setFyrirtaeki(fyrirtaeki.getText());
+        ChatboxController.setNafn(nafn.getText());
+        ChatboxController.setStarf(starf.getText());
+        ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
 
         ViewSwitcher.switchTo(View.VIDTAL, true);
     }
@@ -56,6 +56,10 @@ public class VelkominnController {
      * BREYTA ÞEGAR UNDIRBUNINGS SIÐA KEMUR
      */
     public void onUndirbua(ActionEvent ignored) {
+        ChatboxController.setNafn(nafn.getText());
+        ChatboxController.setStarf(starf.getText());
+        ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
+
         ViewSwitcher.switchTo(View.UNDIRBUA, true);
     }
 

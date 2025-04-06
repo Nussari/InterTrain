@@ -10,28 +10,16 @@ public class VidtalController {
 
     private InterviewBot interview;
 
-    private static String nafn;
-    private static String starf;
-    private static String fyrirtaeki;
-
     @FXML
     public void initialize() throws Exception {
-        interview = new InterviewBot(nafn, fyrirtaeki, starf, 10);
+        String nafn = ChatboxController.getNafn();
+        String starf = ChatboxController.getNafn();
+        String fyrirtaeki = ChatboxController.getNafn();
+
+        interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, "interview");
 
         // Hefur viðtalið
         chatBoxController.nySkilabod(interview.start(), false);
-    }
-
-    public static void setNafn(String nyttNafn) {
-        nafn = nyttNafn;
-    }
-
-    public static void setFyrirtaeki(String nyttFyrirtaeki) {
-        fyrirtaeki = nyttFyrirtaeki;
-    }
-
-    public static void setStarf(String nyttStarf) {
-        starf = nyttStarf;
     }
 
     public void onSenda() throws Exception {
@@ -48,10 +36,10 @@ public class VidtalController {
         chatBoxController.nySkilabod(svar, false);
     }
 
-    public void onEndurstilla() {
+    public void onEndurstilla() throws Exception {
         chatBoxController.clear();
-        // Breyta þessu þegar AI klasi er tilbúinn
-        chatBoxController.nySkilabod("Velkominn", false);
+
+        initialize();
     }
 
     public void onTilBaka() {

@@ -22,6 +22,10 @@ public class ChatboxController {
     @FXML private VBox skilabod;
     @FXML private ScrollPane scrollPane;
 
+    private static String nafn;
+    private static String starf;
+    private static String fyrirtaeki;
+
     @FXML
     public void initialize() {
         skilabod.heightProperty().addListener((obs, oldVal, newVal) -> javafx.application.Platform.runLater(() -> {
@@ -51,6 +55,31 @@ public class ChatboxController {
 
         return container;
     }
+
+    public static String getNafn() {
+        return nafn;
+    }
+
+    public static void setNafn(String nyttNafn) {
+        nafn = nyttNafn;
+    }
+
+    public static String getFyrirtaeki() {
+        return fyrirtaeki;
+    }
+
+    public static void setFyrirtaeki(String nyttFyrirtaeki) {
+        fyrirtaeki = nyttFyrirtaeki;
+    }
+
+    public static String getStarf() {
+        return starf;
+    }
+
+    public static void setStarf(String nyttStarf) {
+        starf = nyttStarf;
+    }
+
 
     public void clear() {
         skilabod.getChildren().clear();
