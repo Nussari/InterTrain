@@ -26,6 +26,10 @@ Til þess að tengjast Gemini forritaskilunum skrifuðum við tvo nýja klasa: *
 Sér um tengingu við Gemini API-ið og helstu aðgerðir (senda og taka við svörum) og heldur einnig utanum skilaboðasögu.
 Eins og áður kom fram útfærðum við "minni" með því að senda einfaldlega alla skilaboðasöguna í hvert skipti sem notandi sendir skilaboð.
 
+**InterviewBot**
+
+Sá klasi sem viðmótið talar við og sér um að fá Gemini til að þykjast vera að taka atvinnuviðtal.
+Er í raun milliliður fyrir framenda og GeminiChatSession til að auðvelda framenda að kalla fram viðtalsvirknina (og undirbúningsvirkni).
 
 #### Keyrsluleiðbeiningar
 
