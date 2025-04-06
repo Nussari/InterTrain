@@ -130,8 +130,4 @@ public class GeminiChatSession {
     public List<Map<String, String>> getConversationHistory() {
         return this.conversationHistory;
     }
-
-    public static void main(String[] args) {
-
-    }
 }

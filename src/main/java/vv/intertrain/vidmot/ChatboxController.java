@@ -80,7 +80,6 @@ public class ChatboxController {
         starf = nyttStarf;
     }
 
-
     public void clear() {
         skilabod.getChildren().clear();
     }

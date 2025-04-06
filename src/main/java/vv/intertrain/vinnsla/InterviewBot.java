@@ -21,22 +21,22 @@ public class InterviewBot {
     private String feedback;
 
     // 0 is prep mode, 1 is interview
-    private String chatType;
+    private final ChatMode mode;
 
     // Interview status, true if ongoing, false if finished
     private Boolean isActive;
     // Total amount of questions asked so far
     private int questionCount;
 
-    public InterviewBot(String name, String company, String jobTitle, int maxQuestionCount, String chatType) {
+    public InterviewBot(String name, String company, String jobTitle, int maxQuestionCount, ChatMode mode) {
         this.name = name;
         this.company = company;
         this.jobTitle = jobTitle;
+        this.mode = mode;
         this.chatSession = new GeminiChatSession("API_LYKILL"); // API lykill fer hingað
         this.initialPrompt = createInitialPrompt();
         this.isActive = true;
         this.questionCount = -1;
-        this.chatType = chatType;
 
         if (maxQuestionCount <= 0) {
             this.MAX_QUESTIONS = DEFAULT_MAX_QUESTIONS;
@@ -45,23 +45,26 @@ public class InterviewBot {
         }
     }
 
-    public InterviewBot(String name, String company, String jobTitle, String chatType) {
-        this(name, company, jobTitle, DEFAULT_MAX_QUESTIONS, chatType);
+    public InterviewBot(String name, String company, String jobTitle, ChatMode mode) {
+        this(name, company, jobTitle, DEFAULT_MAX_QUESTIONS, mode);
     }
 
-    public InterviewBot(String name, String jobTitle, int maxQuestionCount, String chatType) {
-        this(name, "", jobTitle, maxQuestionCount, chatType);
+    public InterviewBot(String name, String jobTitle, int maxQuestionCount, ChatMode mode) {
+        this(name, "", jobTitle, maxQuestionCount, mode);
     }
 
-    public InterviewBot(String name, String jobTitle, String chatType) {
-        this(name, "", jobTitle, DEFAULT_MAX_QUESTIONS, chatType);
+    public InterviewBot(String name, String jobTitle, ChatMode mode) {
+        this(name, "", jobTitle, DEFAULT_MAX_QUESTIONS, mode);
     }
 
     private String createInitialPrompt() {
-        System.out.println("Prep: " + this.chatType);
-        if (Objects.equals(this.chatType, "prep")) {
+        System.out.println("Nafn: " + this.name);
+        System.out.println("Fyrirtæki: " + this.company);
+        System.out.println("Starfsheiti: " + this.jobTitle);
+        if (this.mode == ChatMode.PREPARATION) {
+            System.out.println("Preparation mode");
             return String.format(
-                    "Þú ert starfsráðgjafi sem hjálpar við undirbúning fyrir viðtal. Viðskiptavinurinn er %s sem er að sækja um starf sem %s hjá %s. " +
+                    "Þú ert starfsráðgjafi sem heitir Jón sem hjálpar við undirbúning fyrir viðtal. Viðskiptavinurinn er %s sem er að sækja um starf sem %s hjá %s. " +
                             "1. Byrjaðu á stuttri kynningu á því hvað verður gert í þessu undirbúningsfundi\n" +
                             "2. Farðu í gegnum eftirfarandi þætti:\n" +
                             "   - Algengar viðtalsspurningar (hefðbundnar, hegðunar- og aðstæðuspurningar)\n" +
@@ -74,28 +77,32 @@ public class InterviewBot {
                             "   - 'Lýstu því hvernig þún leystir vanda'\n" +
                             "4. Í lokin:\n" +
                             "   - Dragðu saman lykilatriði\n" +
-                            "   - Hvetdu viðskiptavininn til að æfa svör hávær\n" +
+                            "   - Hvattu viðskiptavininn til að æfa svör upphátt\n" +
                             "   - Bíddu eftir spurningum\n\n" +
                             "Gakktu úr skugga um:\n" +
-                            "- Að halda samtalinu náttúrulega og gagnvirku\n" +
-                            "- Að láta notandann koma orði á milli á\n" +
-                            "- Að nota einfalt og skýrt máli\n" +
-                            "- Að setja áherslu á það sem er mikilvægt fyrir %s\n" +
-                            "- Að tala á ÍSLENSKU",
+                            "- Að halda samtalinu náttúrulegu og gagnvirku\n" +
+                            "- Að setja áherslu á það sem er mikilvægt fyrir þetta starf\n" +
+                            "- Að tala á ÍSLENSKU\n",
+                            "- Að segja ekki of margt í einu",
                     name,
                     jobTitle,
                     company
             );
         }
+        System.out.println("Interview mode");
         return String.format(
-                "You are conducting a mock job interview, your name is Joe. The candidate is %s, applying for %s at %s. " +
-                        "1. First conduct a natural conversation-style interview with different types of questions " +
-                        "(behavioral, situational, technical). Keep it conversational and limit to %d questions.\n" +
-                        "2. After exactly %d questions or when the candidate says 'end', provide feedback with:\n" +
-                        "   - 3 specific strengths from their answers\n" +
-                        "   - 3 concrete areas for improvement\n" +
-                        "   - Reference their actual responses in your feedback. " +
-                        "MAKE SURE TO LET THE CANDIDATE ANSWER, DO NOT ASK ALL QUESTIONS AT ONCE, ALSO DO NOT EXPLICITLY LET THE USER KNOW. SPEAK ICELANDIC!",
+                "Þú ert að taka atvinnuviðtal, þú heitir Jón. Sá/sú sem þú tekur viðtal við heitir %s og er að sækja um starf sem %s hjá %s. " +
+                        "1. Byrjaðu á náttúrulegu viðtali með mismunandi spurningum." +
+                        "(hegðunar, tæknilegum, osfrv.). Haltu flæði í samræðunum og í mesta lagi %d spurningar eru leyfðar.\n" +
+                        "2. Eftir nákvæmlega %d spurningar eða þegar viðmælandinn segir 'hætta', gefðu endurgjöf á eftirfarandi máta:\n" +
+                        "   - 3 styrkleikar útfrá svörunum hans.\n" +
+                        "   - 3 hlutir sem hann mætti bæta útfrá svörunum hans.\n" +
+                        "   - Vitnaðu stuttlega í svörin hans í endurgjöfinni. " +
+                        "   - Ekki fara í alltof mikil smáatriði í endurgjöfinni, reyndu að halda þessu 'short and sweet'.\n" +
+                        "Mundu svo að leyfa viðtakandanum að svara, ekki spyrja margar spurningar í einu.\n" +
+                        "Ekki gleyma að viðtalið á að vera náttúrulegt, þannig ekki taka sérstaklega fram að notandi eigi að svara eða " +
+                        "annað sem kann að vera mjög augljóst.\n" +
+                        "TALAÐU ÍSLENSKU!",
                 name,
                 jobTitle,
                 company,
@@ -128,7 +135,7 @@ public class InterviewBot {
         return chatSession.sendAndReceiveMsg(message);
     }
 
-    public boolean getIsActiveStatus() {
+    public boolean getIsActive() {
         return this.isActive;
     }
 }

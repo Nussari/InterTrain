@@ -2,6 +2,7 @@ package vv.intertrain.vidmot;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import vv.intertrain.vinnsla.ChatMode;
 import vv.intertrain.vinnsla.InterviewBot;
 
 public class UndirbuaController {
@@ -13,10 +14,10 @@ public class UndirbuaController {
     @FXML
     public void initialize() throws Exception {
         String nafn = ChatboxController.getNafn();
-        String starf = ChatboxController.getNafn();
-        String fyrirtaeki = ChatboxController.getNafn();
+        String starf = ChatboxController.getStarf();
+        String fyrirtaeki = ChatboxController.getFyrirtaeki();
 
-        prep = new InterviewBot(nafn, fyrirtaeki, starf, 10, "prep");
+        prep = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
 
         // Hefur viðtalið
         chatBoxController.nySkilabod(prep.start(), false);
