@@ -29,4 +29,9 @@ Eins og áður kom fram útfærðum við "minni" með því að senda einfaldleg
 
 #### Keyrsluleiðbeiningar
 
-1. 
+Til að byggja og keyra forritið í Maven skal fylgja eftirfarandi leiðbeiningum.
+
+1. Klóna repo-ið með ```git clone https://github.com/Nussari/InterTrain.git```
+2. Opna terminal glugga í möppunni sem þú sóttir
+3. Compile-a forritið með því að keyra ```mvn compile```
+4. Keyra upp viðmótið með JavaFX: ```javafx:run```
