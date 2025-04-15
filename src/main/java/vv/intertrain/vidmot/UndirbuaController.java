@@ -9,7 +9,8 @@ public class UndirbuaController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
 
-    private InterviewBot prep;
+    // TEMP FIX COMMENT
+    // private InterviewBot prep;
 
     @FXML
     public void initialize() throws Exception {
@@ -17,10 +18,14 @@ public class UndirbuaController {
         String starf = ChatboxController.getStarf();
         String fyrirtaeki = ChatboxController.getFyrirtaeki();
 
-        prep = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
+        // TEMP FIX COMMENT
+        // prep = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
 
         // Hefur viðtalið
-        chatBoxController.nySkilabod(prep.start(), false);
+        // TEMP FIX COMMENT
+        // chatBoxController.nySkilabod(prep.start(), false);
+        // TEMP FIX LÍNA
+        chatBoxController.nySkilabod("temp start", false);
     }
 
     public void onSenda() throws Exception {
@@ -32,8 +37,12 @@ public class UndirbuaController {
         inntak.clear();
 
         // Sendir skilaboðin á Gemini og setur svarið í búbblu
-        String svar = prep.respond(notandaSkilabod);
-        chatBoxController.nySkilabod(svar, false);
+        // TEMP FIX COMMENT
+        // String svar = prep.respond(notandaSkilabod);
+        // TEMP FIX COMMENT
+        // chatBoxController.nySkilabod(svar, false);
+        // TEMP FIX LÍNA
+        chatBoxController.nySkilabod("temp svar", false);
     }
 
     public void onEndurstilla() throws Exception {
