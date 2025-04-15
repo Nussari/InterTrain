@@ -1,8 +1,10 @@
 package vv.intertrain.vidmot;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
@@ -26,9 +28,11 @@ public class ChatboxController {
     private static String starf;
     private static String fyrirtaeki;
 
+    private HBox sidastaSkilabod;
+
     @FXML
     public void initialize() {
-        skilabod.heightProperty().addListener((obs, oldVal, newVal) -> javafx.application.Platform.runLater(() -> {
+        skilabod.heightProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(() -> {
             scrollPane.setVvalue(1.0);
             scrollPane.layout();
         }));
@@ -36,7 +40,12 @@ public class ChatboxController {
 
     public void nySkilabod(String texti, boolean notandi) {
         HBox textaBubbla = nyBubbla(texti, notandi);
-        skilabod.getChildren().add(textaBubbla);
+        if(!notandi){
+            sidastaSkilabod = textaBubbla; // held utan um nýjasta botta skilaboð tilsa sýna/fela retry takka
+        } else {
+            sidastaSkilabod.getChildren().get(1).setVisible(false); // fel gamla retry takka
+        }
+        skilabod.getChildren().add(textaBubbla); // bæti búbblu við chatbox
     }
 
     private HBox nyBubbla(String texti, boolean notandi) {
@@ -52,6 +61,17 @@ public class ChatboxController {
 
         String klasi = notandi ? "notanda-skilabod" : "tolvu-skilabod";
         textaLabel.getStyleClass().add(klasi);
+
+        if (!notandi) { // set "Reyna aftur" takka við hliðina á búbblu
+            Button retryTakki = new Button("Reyna aftur");
+            retryTakki.getStyleClass().add("retry-takki");
+            retryTakki.setOnAction(e -> {
+                skilabod.getChildren().remove(container); // þegar smellt er á takka eyði hann skilaboðinu
+                // BREYTA ÞESSU ÞEGAR Í KALL Á GERVIGREIND ÞEGAR HÚN ER KOMIN
+                nySkilabod("endurreynt", false);
+            });
+            container.getChildren().add(retryTakki);
+        }
 
         return container;
     }

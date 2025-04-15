@@ -54,3 +54,10 @@ button {
 .notanda-skilabod, .tolvu-skilabod {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
 }
+
+.retry-takki {
+    -fx-background-color: #e0e0e0;
+    -fx-padding: 2 5 2 5;
+    -fx-font-size: 12px;
+}
+
