@@ -135,6 +135,10 @@ public class InterviewBot {
         return chatSession.sendAndReceiveMsg(message);
     }
 
+    public String resendLast() throws Exception {
+        return chatSession.resendLastMessage();
+    }
+
     public boolean getIsActive() {
         return this.isActive;
     }

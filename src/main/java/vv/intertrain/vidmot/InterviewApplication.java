@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import vv.intertrain.vinnsla.InterviewBot;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
  *****************************************************************************/
 
 public class InterviewApplication extends Application {
+    public static InterviewBot interview;
     /**
      * Ræsir notendaviðmótið í glugga stage
      * @param stage glugginn

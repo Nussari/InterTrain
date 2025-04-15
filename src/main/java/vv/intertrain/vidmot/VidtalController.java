@@ -5,6 +5,8 @@ import javafx.scene.control.TextField;
 import vv.intertrain.vinnsla.ChatMode;
 import vv.intertrain.vinnsla.InterviewBot;
 
+import static vv.intertrain.vidmot.InterviewApplication.interview;
+
 public class VidtalController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
@@ -18,14 +20,12 @@ public class VidtalController {
         String starf = ChatboxController.getStarf();
         String fyrirtaeki = ChatboxController.getFyrirtaeki();
 
-        // TEMP FIX COMMENT
-        // interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.INTERVIEW);
+        interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.INTERVIEW);
 
         // Hefur viðtalið
-        // TEMP FIX COMMENT
-        // chatBoxController.nySkilabod(interview.start(), false);
+        chatBoxController.nySkilabod(interview.start(), false);
         // TEMP FIX LÍNA
-        chatBoxController.nySkilabod("temp start", false);
+        //chatBoxController.nySkilabod("temp start", false);
     }
 
     public void onSenda() throws Exception {
@@ -38,12 +38,8 @@ public class VidtalController {
         inntak.clear();
 
         // Sendir skilaboðin á Gemini og setur svarið í búbblu
-        // TEMP FIX COMMENT
-        // String svar = interview.respond(notandaSkilabod);
-        // TEMP FIX COMMENT
-        // chatBoxController.nySkilabod(svar, false);
-        // TEMP FIX LÍNA
-        chatBoxController.nySkilabod("temp svar", false);
+        String svar = interview.respond(notandaSkilabod);
+        chatBoxController.nySkilabod(svar, false);
     }
 
     public void onEndurstilla() throws Exception {
