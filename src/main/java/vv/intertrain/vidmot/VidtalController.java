@@ -9,7 +9,8 @@ public class VidtalController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
 
-    private InterviewBot interview;
+    // TEMP FIX COMMENT
+    // private InterviewBot interview;
 
     @FXML
     public void initialize() throws Exception {
@@ -17,10 +18,14 @@ public class VidtalController {
         String starf = ChatboxController.getStarf();
         String fyrirtaeki = ChatboxController.getFyrirtaeki();
 
-        interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.INTERVIEW);
+        // TEMP FIX COMMENT
+        // interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.INTERVIEW);
 
         // Hefur viðtalið
-        chatBoxController.nySkilabod(interview.start(), false);
+        // TEMP FIX COMMENT
+        // chatBoxController.nySkilabod(interview.start(), false);
+        // TEMP FIX LÍNA
+        chatBoxController.nySkilabod("temp start", false);
     }
 
     public void onSenda() throws Exception {
@@ -33,8 +38,12 @@ public class VidtalController {
         inntak.clear();
 
         // Sendir skilaboðin á Gemini og setur svarið í búbblu
-        String svar = interview.respond(notandaSkilabod);
-        chatBoxController.nySkilabod(svar, false);
+        // TEMP FIX COMMENT
+        // String svar = interview.respond(notandaSkilabod);
+        // TEMP FIX COMMENT
+        // chatBoxController.nySkilabod(svar, false);
+        // TEMP FIX LÍNA
+        chatBoxController.nySkilabod("temp svar", false);
     }
 
     public void onEndurstilla() throws Exception {
