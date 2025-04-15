@@ -33,7 +33,7 @@ public class InterviewBot {
         this.company = company;
         this.jobTitle = jobTitle;
         this.mode = mode;
-        this.chatSession = new GeminiChatSession("API_LYKILL"); // API lykill fer hingað
+        this.chatSession = new GeminiChatSession("API_KEY"); // API lykill fer hingað
         this.initialPrompt = createInitialPrompt();
         this.isActive = true;
         this.questionCount = -1;

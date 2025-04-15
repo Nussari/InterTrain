@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20.0" stylesheets="@CSS/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vv.intertrain.vidmot.UndirbuaController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox spacing="20.0">
+        <VBox>
+            <children>
+                <Label text="Flokkar" />
+                <ListView fx:id="fxFlokkar" prefWidth="150.0" />
+            </children>
+        </VBox>
+
+        <VBox>
+            <children>
+                <Label text="Spurningar" />
+                <ListView fx:id="fxSpurningar" prefWidth="150.0" />
+            </children>
+        </VBox>
+
+        <VBox>
+            <children>
+                <Label text="Fjöldi svara" />
+                <Label fx:id="fxFjoldiSvara" text="0" />
+            </children>
+        </VBox>
+
+        <VBox>
+            <children>
+                <Label text="Spurninga log " />
+                <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="150.0" prefWidth="250.0">
+                    <content>
+                        <TextArea fx:id="fxSpurningaLog" disable="true" editable="false" promptText="Engum spurningum svarað..." wrapText="true" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </HBox>
+
+    <ButtonBar>
+        <buttons>
+            <Button onAction="#onSvara" text="Svara" ButtonBar.buttonData="OK_DONE">
+                <font>
+                    <Font name="Helvetica" size="12.0" />
+                </font>
+            </Button>
+            <Button onAction="#onTilBaka" text="Til baka" ButtonBar.buttonData="OTHER">
+                <font>
+                    <Font name="Helvetica" size="12.0" />
+                </font>
+            </Button>
+            <Button onAction="#onHaetta" text="Hætta" ButtonBar.buttonData="CANCEL_CLOSE">
+                <font>
+                    <Font name="Helvetica" size="12.0" />
+                </font>
+            </Button>
+        </buttons>
+    </ButtonBar>
+</VBox>

@@ -79,7 +79,7 @@ public class SvarDialogController extends Dialog<String> {
         try {
             this.svar = (String) fxSvar.getText();
             // Birtir endurgjöf fyrir svar notanda
-            fxFeedback.setText(FeedbackService.provideFeedback(this.svar));
+            // fxFeedback.setText(FeedbackService.provideFeedback(this.svar));
 
         } catch (IllegalArgumentException e) {
             System.out.println("Ólöglegt inntak! " + e.getMessage());
