@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class InterviewBot {
 
+
     // Config
     private static final int DEFAULT_MAX_QUESTIONS = 10;
     private final int MAX_QUESTIONS;
@@ -29,11 +30,19 @@ public class InterviewBot {
     private int questionCount;
 
     public InterviewBot(String name, String company, String jobTitle, int maxQuestionCount, ChatMode mode) {
+
+        String apiKey = System.getenv("GEMINI_KEY");
+
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.err.println("Missing API_KEY environment variable");
+            System.exit(1);
+        }
+
         this.name = name;
         this.company = company;
         this.jobTitle = jobTitle;
         this.mode = mode;
-        this.chatSession = new GeminiChatSession("API_LYKILL"); // API lykill fer hingað
+        this.chatSession = new GeminiChatSession(apiKey); // API lykill fer hingað
         this.initialPrompt = createInitialPrompt();
         this.isActive = true;
         this.questionCount = -1;
