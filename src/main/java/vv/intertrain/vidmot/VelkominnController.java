@@ -49,7 +49,7 @@ public class VelkominnController {
         ChatboxController.setStarf(starf.getText());
         ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
 
-        ViewSwitcher.switchTo(View.VIDTAL, true);
+        ViewSwitcher.switchTo(View.VIDTAL, false);
     }
 
     /**
@@ -60,7 +60,7 @@ public class VelkominnController {
         ChatboxController.setStarf(starf.getText());
         ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
 
-        ViewSwitcher.switchTo(View.UNDIRBUA, true);
+        ViewSwitcher.switchTo(View.UNDIRBUA, false);
     }
 
     /**

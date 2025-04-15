@@ -10,13 +10,13 @@ public class GeminiChatSession {
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     private final String apiKey;
     private final List<Map<String, String>> conversationHistory;
-    private final ExecutorService executor;
+    //private final ExecutorService executor;
     private String lastUserMessage;
 
     public GeminiChatSession(String apiKey) {
         this.apiKey = apiKey;
         this.conversationHistory = new ArrayList<>();
-        this.executor = Executors.newFixedThreadPool(1);
+        //this.executor = Executors.newFixedThreadPool(1);
         this.lastUserMessage = "";
     }
 
@@ -42,6 +42,7 @@ public class GeminiChatSession {
 
         // Add AI response to history
         addMessage("model", aiResponse);
+
 
         return aiResponse;
     }
@@ -137,7 +138,7 @@ public class GeminiChatSession {
         ));
     }
 
-    private void popLastMessagePair() {
+    public void popLastMessagePair() {
         if (conversationHistory.isEmpty()) {
             System.err.println("Conversation list is empty");
             // or throw exception if preferred
