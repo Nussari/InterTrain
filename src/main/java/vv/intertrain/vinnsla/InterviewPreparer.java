@@ -24,7 +24,7 @@ public class InterviewPreparer {
     // Total amount of questions answered so far
     private int answerCount;
 
-    // Questions and grousp
+    // Questions and groups
     private final Map<String, ObservableList<String>> questions = new HashMap<>();
     private final ObservableList<String> groups = FXCollections.observableArrayList();
 
@@ -97,59 +97,37 @@ public class InterviewPreparer {
                 questionsPerGroup
         );
         */
-        return "{\n" +
-                "  \"job_title\": \"Java Developer\",\n" +
-                "  \"workplace\": \"Acme Corp\",\n" +
-                "  \"groups\": [\n" +
-                "    {\n" +
-                "      \"group\": \"Technical\",\n" +
-                "      \"questions\": [\n" +
-                "        \"Can you explain the difference between an interface and an abstract class in Java?\",\n" +
-                "        \"How do you handle exceptions in Java applications?\",\n" +
-                "        \"What are some best practices for multithreaded programming in Java?\"\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"group\": \"Behavioral\",\n" +
-                "      \"questions\": [\n" +
-                "        \"Describe a time you worked as part of a team to solve a difficult problem.\",\n" +
-                "        \"How do you handle tight deadlines and pressure?\",\n" +
-                "        \"Tell us about a situation where you had to quickly learn a new technology.\"\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n";
+        return """
+                {
+                  "job_title": "Java Developer",
+                  "workplace": "Acme Corp",
+                  "groups": [
+                    {
+                      "group": "Technical",
+                      "questions": [
+                        "Can you explain the difference between an interface and an abstract class in Java?",
+                        "How do you handle exceptions in Java applications?",
+                        "What are some best practices for multithreaded programming in Java?"
+                      ]
+                    },
+                    {
+                      "group": "Behavioral",
+                      "questions": [
+                        "Describe a time you worked as part of a team to solve a difficult problem.",
+                        "How do you handle tight deadlines and pressure?",
+                        "Tell us about a situation where you had to quickly learn a new technology."
+                      ]
+                    }
+                  ]
+                }
+                """;
     }
 
     // Starts the interview (sends the preprompt to the ai and returns the response)
     public String requestQuestions() throws Exception {
         // Sends the question request prompt and returns the questions
         String questionsJson = chatSession.sendAndReceiveMsg(this.questionRequestPrompt);
-        this.questions = parseQuestionsFromJson(questionsJson);
-    }
-    private final Map<String, ObservableList<String>> questions = new HashMap<>();
-
-    public Map<String, ObservableList<String>> parseQuestionsFromJson(String json) {
-        Map<String, ObservableList<String>> result = new HashMap<>();
-
-        Gson gson = new Gson();
-        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        JsonArray groupsArray = root.getAsJsonArray("groups");
-
-        for (JsonElement groupElem : groupsArray) {
-            JsonObject groupObj = groupElem.getAsJsonObject();
-            String groupName = groupObj.get("group").getAsString();
-            JsonArray questionsArray = groupObj.getAsJsonArray("questions");
-
-            // Parse questions into a List<String>
-            Type listType = new TypeToken<List<String>>() {}.getType();
-            List<String> questions = gson.fromJson(questionsArray, listType);
-
-            // Add to result as ObservableList
-            result.put(groupName, FXCollections.observableArrayList(questions));
-        }
-
-        return result;
+        // this.questions = parseQuestionsFromJson(questionsJson);
     }
 
 
