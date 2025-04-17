@@ -1,7 +1,6 @@
 package vv.intertrain.vinnsla;
 
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InterviewBot {
 
@@ -21,13 +20,13 @@ public class InterviewBot {
     private String feedbackTriggerPrompt;
     private String feedback;
 
-    // 0 is prep mode, 1 is interview
+    // Undirbúa eða viðtal
     private final ChatMode mode;
 
     // Interview status, true if ongoing, false if finished
     private Boolean isActive;
-    // Total amount of questions asked so far
-    private int questionCount;
+    // Magn spurninga sem hafa verið spurðar, Atomic til að virki vel async
+    private AtomicInteger questionCount = new AtomicInteger(-1);
 
     public InterviewBot(String name, String company, String jobTitle, int maxQuestionCount, ChatMode mode) {
 
@@ -45,7 +44,6 @@ public class InterviewBot {
         this.chatSession = new GeminiChatSession(apiKey); // API lykill fer hingað
         this.initialPrompt = createInitialPrompt();
         this.isActive = true;
-        this.questionCount = -1;
 
         if (maxQuestionCount <= 0) {
             this.MAX_QUESTIONS = DEFAULT_MAX_QUESTIONS;
@@ -128,10 +126,10 @@ public class InterviewBot {
     // Respond to the interviewer and get the answer back
     public String respond(String message) throws Exception {
         // Increments the question count
-        this.questionCount++;
+        int currentCount = questionCount.incrementAndGet();
 
         // If the interview has reached the maximum amount of questions
-        if (this.questionCount >= MAX_QUESTIONS) {
+        if (currentCount >= MAX_QUESTIONS) {
             this.feedbackTriggerPrompt = "The interview is now complete. Please provide the feedback as specified in the initial instructions.";
             this.feedback = chatSession.sendAndReceiveMsg(feedbackTriggerPrompt);
             System.out.println(this.feedback);

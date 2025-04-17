@@ -1,5 +1,6 @@
 package vv.intertrain.vidmot;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import vv.intertrain.vinnsla.ChatMode;
@@ -19,8 +20,23 @@ public class UndirbuaController {
 
         prep = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
 
-        // Hefur viðtalið
-        chatBoxController.nySkilabod(prep.start(), false);
+        Task<String> initTask = new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                return prep.start();
+            }
+        };
+
+        initTask.setOnSucceeded(e -> {
+            chatBoxController.fyrstuSkilabod(initTask.getValue());
+
+        });
+
+        initTask.setOnFailed(e -> {
+            chatBoxController.fyrstuSkilabod("Error initializing chat");
+        });
+
+        new Thread(initTask).start();
     }
 
     public void onSenda() throws Exception {
@@ -31,9 +47,27 @@ public class UndirbuaController {
         // Hreinsar inntak
         inntak.clear();
 
-        // Sendir skilaboðin á Gemini og setur svarið í búbblu
-        String svar = prep.respond(notandaSkilabod);
-        chatBoxController.nySkilabod(svar, false);
+        // API hlutir gerðir í bakgrunn til að forrit frjósi ekki
+        Task<String> responseTask = new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                // Sæki svar frá API
+                return prep.respond(notandaSkilabod);
+            }
+        };
+
+        responseTask.setOnSucceeded(e -> {
+            // Set svarið í búbblu
+            chatBoxController.nySkilabod(responseTask.getValue(), false);
+        });
+
+        responseTask.setOnFailed(e -> {
+            // Ef gervigreind klikkar
+            chatBoxController.nySkilabod("Villa hjá gervigreind, reyndu aftur", false);
+        });
+
+        // Þræðir bjarga lífum
+        new Thread(responseTask).start();
     }
 
     public void onEndurstilla() throws Exception {
