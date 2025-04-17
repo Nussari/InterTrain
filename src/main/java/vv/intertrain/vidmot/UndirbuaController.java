@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import vv.intertrain.vinnsla.InterviewPreparer;
+// import vv.intertrain.vinnsla.InterviewPreparer;
 // import vinnsla.Spurningar;
 
 import static vv.intertrain.vidmot.InterviewApplication.interview;
@@ -31,7 +31,7 @@ public class UndirbuaController {
     @FXML
     private TextArea fxSpurningaLog;
 
-    private InterviewPreparer interviewPreparer;
+    //private InterviewPreparer interviewPreparer;
 
     private String valinnFlokkur;
     private String valinSpurning;
@@ -100,11 +100,11 @@ public class UndirbuaController {
         interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
 
 
-        this.interviewPreparer = new InterviewPreparer(starf, fyrirtaeki, 3);
+        //this.interviewPreparer = new InterviewPreparer(starf, fyrirtaeki, 3);
 
         try {
-            String test = interviewPreparer.requestQuestions();
-            System.out.println(test);
+            //String test = interviewPreparer.requestQuestions();
+            //System.out.println(test);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

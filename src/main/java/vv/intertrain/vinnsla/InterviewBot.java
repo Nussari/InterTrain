@@ -33,7 +33,7 @@ public class InterviewBot {
         String apiKey = System.getenv("GEMINI_KEY");
 
         if (apiKey == null || apiKey.isEmpty()) {
-            System.err.println("Missing API_KEY environment variable");
+            System.err.println("Missing GEMINI_KEY environment variable");
             System.exit(1);
         }
 

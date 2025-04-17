@@ -5,8 +5,12 @@ module vv.intertrain {
     requires com.fasterxml.jackson.databind;
     requires com.google.gson;
     requires google.cloud.vertexai;
+    requires org.json;
+    requires spring.core;
+    requires spring.web;
 
 
     opens vv.intertrain.vidmot to javafx.fxml;
     exports vv.intertrain.vidmot;
+    opens vv.intertrain.vinnsla.com.logaritex.ai.api to com.fasterxml.jackson.databind;
 }
