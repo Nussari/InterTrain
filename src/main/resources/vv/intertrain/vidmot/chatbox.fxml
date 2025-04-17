@@ -14,9 +14,7 @@
             maxHeight="500"
             hbarPolicy="NEVER">
 
-    <VBox fx:id="skilabod"
-          spacing="10"
-          styleClass="skilabod-container"/>
+    <VBox fx:id="skilabod" spacing="10" styleClass="skilabod-container"/>
 
     <stylesheets>
         <URL value="@CSS/style.css" />
