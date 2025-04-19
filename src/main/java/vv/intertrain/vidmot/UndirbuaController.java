@@ -33,7 +33,7 @@ public class UndirbuaController {
         });
 
         initTask.setOnFailed(e -> {
-            chatBoxController.fyrstuSkilabod("Error initializing chat");
+            chatBoxController.fyrstuSkilabod("Villa hjá gervigreind.");
         });
 
         new Thread(initTask).start();
