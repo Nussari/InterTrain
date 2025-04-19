@@ -13,11 +13,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import vv.intertrain.vinnsla.InterviewPreparer;
 // import vv.intertrain.vinnsla.InterviewPreparer;
 // import vinnsla.Spurningar;
 
 import static vv.intertrain.vidmot.InterviewApplication.interview;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,6 +40,7 @@ public class UndirbuaController {
     // private Spurningar spurningar;
     private final ObservableList<String> spurningaLog = FXCollections.observableArrayList();
     private final StringProperty spurningaLogProperty = new SimpleStringProperty("");
+    private InterviewPreparer interviewPreparer;
 
     @FXML
     protected void onSvara() {
@@ -100,7 +103,11 @@ public class UndirbuaController {
         interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
 
 
-        //this.interviewPreparer = new InterviewPreparer(starf, fyrirtaeki, 3);
+        this.interviewPreparer = new InterviewPreparer(starf, fyrirtaeki, 3);
+
+        List<String> groups = List.of("Tæknilegar", "Samskipta");
+
+        this.questions = interviewpreparer.requestQuestions(starf, fyrirtaeki, groups);
 
         try {
             //String test = interviewPreparer.requestQuestions();

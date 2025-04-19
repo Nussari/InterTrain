@@ -1,147 +1,167 @@
 package vv.intertrain.vinnsla;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import vv.intertrain.vinnsla.com.logaritex.ai.api.AssistantApi;
+import vv.intertrain.vinnsla.com.logaritex.ai.api.Data.Assistant;
+import vv.intertrain.vinnsla.com.logaritex.ai.api.Data;
+import vv.intertrain.vinnsla.com.logaritex.ai.api.Data.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import com.google.gson.*;
-import java.util.*;
-/*
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+
 public class InterviewPreparer {
 
-    // Job information
-    private String company;
-    private String jobTitle;
+    private static final String ASSISTANT_ID = "asst_vLMQ1M855Jt8UPPi2S4CTroW";
+    private static final String FEEDBACK_ASSISTANT_ID = "asst_k79wj6VICKkqeYsNt32i9LoU";
+    private static final String BASE_URL = "https://api.openai.com/v1/";
 
-    private GeminiChatSession chatSession;
+    private final AssistantApi assistantApi;
+    private final Assistant assistant;
 
-    private String questionRequestPrompt;
-    private String feedbackTriggerPrompt;
-    private String feedback;
+    private final Assistant feedbackAssistant;
+    private final Data.Thread thread;
+    private final Data.Thread feedbackThread;
 
-    private int questionsPerGroup;
-    // Total amount of questions answered so far
-    private int answerCount;
+    public InterviewPreparer() {
 
-    // Questions and groups
-    private final Map<String, ObservableList<String>> questions = new HashMap<>();
-    private final ObservableList<String> groups = FXCollections.observableArrayList();
-
-    public InterviewPreparer(String company, String jobTitle, int questionsPerGroup) {
-
-        String apiKey = System.getenv("GEMINI_KEY");
+        String apiKey = System.getenv("OPENAI_KEY");
 
         if (apiKey == null || apiKey.isEmpty()) {
-            System.err.println("Missing API_KEY environment variable");
+            System.err.println("Missing OPENAI_KEY environment variable");
             System.exit(1);
         }
 
-        this.company = company;
-        this.jobTitle = jobTitle;
-        this.chatSession = new GeminiChatSession(apiKey); // API lykill fer hingað
-        this.groups.add("Skill questions");
-        this.groups.add("Technical questions");
-
-        this.questionRequestPrompt = createPrompt();
-        this.questionsPerGroup = questionsPerGroup;
-        this.answerCount = 0;
+        this.assistantApi = new AssistantApi(apiKey);
+        this.assistant = assistantApi.retrieveAssistant(ASSISTANT_ID);
+        this.feedbackAssistant = assistantApi.retrieveAssistant(FEEDBACK_ASSISTANT_ID);
+        this.thread = assistantApi.createThread(new ThreadRequest());
+        this.feedbackThread = assistantApi.createThread(new ThreadRequest());
     }
 
-    private String createPrompt() {
+    public String requestQuestions(String jobTitle, String workplace, List<String> groups) throws InterruptedException {
+        // Convert the list of groups to a JSON array string
+        String groupsJson = groups.stream()
+                .map(g -> "\"" + g + "\"")
+                .collect(Collectors.joining(", "));
 
-        // Build the group array for the JSON
-        StringBuilder groupsJson = new StringBuilder();
-        groupsJson.append("[");
-        for (int i = 0; i < groups.size(); i++) {
-            groupsJson.append("\"").append(groups.get(i)).append("\"");
-            if (i < groups.size() - 1) {
-                groupsJson.append(", ");
-            }
-        }
-        groupsJson.append("]");
-
-        /*
-        return String.format(
-                "You are an expert interview assistant.\n" +
-                        "Here below I have provided you with the following data:\n" +
-                        "\n" +
-                        "A list of question groups (e.g., technical, behavioral, leadership, etc.)\n" +
-                        "The job title\n" +
-                        "Optionally, the workplace name\n" +
-                        "{\n" +
-                        "  \"job_title\": \"%s\",\n" +
-                        "  \"workplace\": \"%s\",\n" +
-                        "  \"groups\": %s\n" +
-                        "}\n" +
-                        "Your tasks:\n" +
-                        "\n" +
-                        "1. For each question group, generate exactly %s high-quality, relevant interview questions.\n" +
-                        "2. Ensure the questions are tailored to the job title (and workplace, if provided).\n" +
-                        "3. Respond to this message in the following strict JSON format only, and DO NOT include any text outside the JSON:\n" +
-                        "{\n" +
-                        "      \"group\": \"<group name>\",\n" +
-                        "      \"questions\": [\n" +
-                        "        \"<question 1>\",\n" +
-                        "        \"<question 2>\",\n" +
-                        "        \"... up to %s questions ...\"\n" +
-                        "      ]\n" +
-                        "    }\n" +
-                        "    // ...repeat for each group...\n" +
-                        "  ]\n" +
-                        "}\n",
-                jobTitle,
-                company,
-                groupsJson.toString(),
-                questionsPerGroup,
-                questionsPerGroup
-        );
-        */
-/*
-        return """
+        // Build the JSON string dynamically
+        String messageContent = String.format("""
                 {
-                  "job_title": "Java Developer",
-                  "workplace": "Acme Corp",
-                  "groups": [
-                    {
-                      "group": "Technical",
-                      "questions": [
-                        "Can you explain the difference between an interface and an abstract class in Java?",
-                        "How do you handle exceptions in Java applications?",
-                        "What are some best practices for multithreaded programming in Java?"
-                      ]
-                    },
-                    {
-                      "group": "Behavioral",
-                      "questions": [
-                        "Describe a time you worked as part of a team to solve a difficult problem.",
-                        "How do you handle tight deadlines and pressure?",
-                        "Tell us about a situation where you had to quickly learn a new technology."
-                      ]
-                    }
-                  ]
+                    "job_title": "%s",
+                    "workplace": "%s",
+                    "groups": [%s]
                 }
-                """;
+                """, jobTitle, workplace, groupsJson);
+
+        assistantApi.createMessage(new Data.MessageRequest(
+                        Data.Role.user, // user created message.
+                        messageContent), // user question.
+                thread.id()); // thread to add the message to.
+
+        Data.Run run = assistantApi.createRun(
+                thread.id(), // run this thread,
+                new Data.RunRequest(assistant.id())); // with this assistant.
+
+        while (assistantApi.retrieveRun(thread.id(), run.id()).status() != Data.Run.Status.completed) {
+            java.lang.Thread.sleep(500);
+        }
+
+        // Display the Assistant's Response
+        Data.DataList<Data.Message> messages = assistantApi.listMessages(
+                new Data.ListRequest(), thread.id());
+
+        // Filter out the assistant messages only.
+        List<Data.Message> assistantMessages = messages.data().stream()
+                .filter(msg -> msg.role() == Data.Role.assistant).toList();
+
+        Data.DataList<Data.Message> newMessages = assistantApi.listMessages(new Data.ListRequest(), thread.id());
+
+        return extractGroupsFromMessages(newMessages);
     }
 
-    // Starts the interview (sends the preprompt to the ai and returns the response)
-    public String requestQuestions() throws Exception {
-        // Sends the question request prompt and returns the questions
-        String questionsJson = chatSession.sendAndReceiveMsg(this.questionRequestPrompt);
-        // this.questions = parseQuestionsFromJson(questionsJson);
+    public String extractGroupsFromMessages(Data.DataList<Data.Message> messages) {
+        try {
+            // Filter assistant messages
+            List<Data.Message> assistantMessages = messages.data().stream()
+                    .filter(msg -> msg.role() == Data.Role.assistant)
+                    .toList();
+
+            if (assistantMessages.isEmpty()) {
+                return "No assistant messages found.";
+            }
+
+            // Get the first assistant message's content (assuming it's text-based)
+            String contentJson = assistantMessages.get(0)
+                    .content()
+                    .get(0)
+                    .text()
+                    .value(); // Adjust this if the structure is different
+
+            // Parse the JSON
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(contentJson);
+
+            // Extract the "groups" field
+            JsonNode groupsNode = rootNode.get("groups");
+
+            if (groupsNode == null) {
+                return "No 'groups' field found in assistant message.";
+            }
+
+            // Return it as a pretty JSON string
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(groupsNode);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error parsing assistant message.";
+        }
     }
 
 
-    public Map<String, ObservableList<String>> getQuestions() {
-        return this.questions;
+    public String requestFeedback(String question, String answer) throws InterruptedException {
+        // Build the JSON string dynamically
+        String messageContent = String.format("""
+                {
+                    "question": "%s",
+                    "answer": "%s"
+                }
+                """, question, answer);
+
+        assistantApi.createMessage(new Data.MessageRequest(
+                        Data.Role.user, // user created message.
+                        messageContent), // user question.
+                feedbackThread.id()); // thread to add the message to.
+
+        Data.Run run = assistantApi.createRun(
+                feedbackThread.id(), // run this thread,
+                new Data.RunRequest(feedbackAssistant.id())); // with this assistant.
+
+        while (assistantApi.retrieveRun(feedbackThread.id(), run.id()).status() != Data.Run.Status.completed) {
+            java.lang.Thread.sleep(500);
+        }
+
+        // Display the Assistant's Response
+        Data.DataList<Data.Message> messages = assistantApi.listMessages(
+                new Data.ListRequest(), feedbackThread.id());
+
+        // Filter out the assistant messages only.
+        List<Data.Message> assistantMessages = messages.data().stream()
+                .filter(msg -> msg.role() == Data.Role.assistant).toList();
+
+        return assistantMessages.toString();
     }
 
-    public ObservableList<String> getGroups() {
-        return this.groups;
-    }
 
-    public String resendLast() throws Exception {
-        return chatSession.resendLastMessage();
+    public static void main(String[] args) throws InterruptedException {
+        InterviewPreparer ai = new InterviewPreparer();
+
+        List<String> groups = List.of("Technical", "Communication");
+
+        System.out.println(ai.requestQuestions("Byggingaverkfræðingur", "Trade Info", groups));
+
+        System.out.println(ai.requestFeedback("How good are you at Excel", "Pretty good"));
     }
 }
-*/
