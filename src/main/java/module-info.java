@@ -6,8 +6,8 @@ module vv.intertrain {
     requires com.google.gson;
     requires google.cloud.vertexai;
     requires org.json;
-    requires spring.core;
     requires spring.web;
+    requires spring.core;
 
 
     opens vv.intertrain.vidmot to javafx.fxml;

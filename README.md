@@ -35,7 +35,20 @@ Er í raun milliliður fyrir framenda og GeminiChatSession til að auðvelda fra
 
 Til að byggja og keyra forritið í Maven skal fylgja eftirfarandi leiðbeiningum.
 
+Fyrirkröfur:
+
+1. JDK 21+
+2. Maven 3.6.3+ eða ritill með Maven 3.6.3+
+
+Uppsetning í cmd/terminal:
+
 1. Klóna repo-ið með ```git clone https://github.com/Nussari/InterTrain.git```
-2. Opna terminal glugga í möppunni sem þú sóttir
-3. Compile-a forritið með því að keyra ```mvn compile```
-4. Keyra upp viðmótið með JavaFX: ```javafx:run```
+2. Opna terminal/command prompt glugga í möppunni sem þú sóttir
+4. Setja API lykil í environment, windows: ```setx GEMINI_KEY "lykill"```, macOS/linux: ```export GEMINI_KEY "lykill"```
+5. Keyra upp viðmótið með JavaFX: ```mvn javafx:run```
+
+Uppsetning í ritill (IntelliJ t.d.):
+1. Klóna repo-ið með ```git clone https://github.com/Nussari/InterTrain.git```
+2. Opna möppuna í ritli
+3. Setja API lykil í environment, Í IntelliJ: Settings > Build, Execution, Deployment > Build Tools > Maven > Runner > Environment variables ```GEMINI_KEY "lykill"```
+4. Keyra með javafx

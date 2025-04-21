@@ -29,6 +29,7 @@ public class ChatboxController {
     private static String starf;
     private static String fyrirtaeki;
 
+    private HBox hledsluSkilabod;
     private HBox sidastaSkilabod;
 
     @FXML
@@ -37,6 +38,17 @@ public class ChatboxController {
             scrollPane.setVvalue(1.0);
             scrollPane.layout();
         }));
+        // Bæti við texta sem segir að verið sé að hlaða gervigreind
+        hledsluSkilabod = nyHledsla();
+        skilabod.getChildren().add(hledsluSkilabod);
+    }
+
+    public void fyrstuSkilabod(String texti){
+        // Tek burt textann sem segir að sé verið að hlaða
+        if (hledsluSkilabod != null && skilabod.getChildren().contains(hledsluSkilabod)) {
+            skilabod.getChildren().remove(hledsluSkilabod);
+        }
+        nySkilabod(texti, false);
     }
 
     public void nySkilabod(String texti, boolean notandi) {
@@ -84,6 +96,18 @@ public class ChatboxController {
         return container;
     }
 
+    private HBox nyHledsla() {
+        HBox container = new HBox();
+        container.setAlignment(Pos.CENTER);
+        container.setPadding(new Insets(10));
+
+        Label loadingLabel = new Label("Hleð gervigreind...");
+        loadingLabel.setStyle("-fx-text-fill: #666; -fx-font-style: italic;");
+
+        container.getChildren().add(loadingLabel);
+        return container;
+    }
+
     public static String getNafn() {
         return nafn;
     }
@@ -110,5 +134,6 @@ public class ChatboxController {
 
     public void clear() {
         skilabod.getChildren().clear();
+        initialize();
     }
 }

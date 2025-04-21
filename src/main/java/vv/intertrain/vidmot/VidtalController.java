@@ -1,5 +1,6 @@
 package vv.intertrain.vidmot;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import vv.intertrain.vinnsla.ChatMode;
@@ -11,8 +12,7 @@ public class VidtalController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
 
-    // TEMP FIX COMMENT
-    // private InterviewBot interview;
+    private InterviewBot interview;
 
     @FXML
     public void initialize() throws Exception {
@@ -22,10 +22,23 @@ public class VidtalController {
 
         interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.INTERVIEW);
 
-        // Hefur viðtalið
-        chatBoxController.nySkilabod(interview.start(), false);
-        // TEMP FIX LÍNA
-        //chatBoxController.nySkilabod("temp start", false);
+        Task<String> initTask = new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                return interview.start();
+            }
+        };
+
+        initTask.setOnSucceeded(e -> {
+            chatBoxController.fyrstuSkilabod(initTask.getValue());
+
+        });
+
+        initTask.setOnFailed(e -> {
+            chatBoxController.fyrstuSkilabod("Villa hjá gervigreind.");
+        });
+
+        new Thread(initTask).start();
     }
 
     public void onSenda() throws Exception {
@@ -37,14 +50,31 @@ public class VidtalController {
         // Hreinsar inntak
         inntak.clear();
 
-        // Sendir skilaboðin á Gemini og setur svarið í búbblu
-        String svar = interview.respond(notandaSkilabod);
-        chatBoxController.nySkilabod(svar, false);
+        // API hlutir gerðir í bakgrunn til að forrit frjósi ekki
+        Task<String> responseTask = new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                // Sæki svar frá API
+                return interview.respond(notandaSkilabod);
+            }
+        };
+
+        responseTask.setOnSucceeded(e -> {
+            // Set svarið í búbblu
+            chatBoxController.nySkilabod(responseTask.getValue(), false);
+        });
+
+        responseTask.setOnFailed(e -> {
+            // Ef gervigreind klikkar
+            chatBoxController.nySkilabod("Villa hjá gervigreind, reyndu aftur", false);
+        });
+
+        // Þræðir bjarga lífum
+        new Thread(responseTask).start();
     }
 
     public void onEndurstilla() throws Exception {
         chatBoxController.clear();
-
         initialize();
     }
 
