@@ -10,6 +10,8 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
+    <Label styleClass="titill" text="Undirbúningur" />
+
     <HBox spacing="20.0">
         <VBox>
             <children>
@@ -21,20 +23,21 @@
         <VBox>
             <children>
                 <Label text="Spurningar" />
-                <ListView fx:id="fxSpurningar" prefWidth="150.0" />
+                <ListView fx:id="fxSpurningar" prefWidth="250.0" />
+                <Label fx:id="fxLoading" text="Hleður spurningum frá gervigreind..." />
             </children>
         </VBox>
 
         <VBox>
             <children>
-                <Label text="Fjöldi svara" />
+                <Label text="Svör" prefWidth="55.0" />
                 <Label fx:id="fxFjoldiSvara" text="0" />
             </children>
         </VBox>
 
         <VBox>
             <children>
-                <Label text="Spurninga log " />
+                <Label text="Svarað " />
                 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="150.0" prefWidth="250.0">
                     <content>
                         <TextArea fx:id="fxSpurningaLog" disable="true" editable="false" promptText="Engum spurningum svarað..." wrapText="true" />

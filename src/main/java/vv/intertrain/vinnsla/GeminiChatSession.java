@@ -141,7 +141,6 @@ public class GeminiChatSession {
     public void popLastMessagePair() {
         if (conversationHistory.isEmpty()) {
             System.err.println("Conversation list is empty");
-            // or throw exception if preferred
         }
 
         // Removes the users's latest message

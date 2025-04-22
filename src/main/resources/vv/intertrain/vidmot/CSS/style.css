@@ -61,3 +61,7 @@ button {
     -fx-font-size: 12px;
 }
 
+.textarea-noborder {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}

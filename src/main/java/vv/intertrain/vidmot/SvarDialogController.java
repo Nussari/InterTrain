@@ -1,12 +1,12 @@
 package vv.intertrain.vidmot;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-// import vinnsla.FeedbackService
-
 import java.io.IOException;
+import static vv.intertrain.vidmot.InterviewApplication.spurningar;
 
 /******************************************************************************
  *  Nafn    : Viktor Óli Bjarkason
@@ -20,7 +20,7 @@ public class SvarDialogController extends Dialog<String> {
 
     // Viðmótshlutir
     @FXML
-    private Label fxSpurning;
+    private TextArea fxSpurning;
     @FXML
     private TextField fxSvar;
     @FXML
@@ -41,7 +41,7 @@ public class SvarDialogController extends Dialog<String> {
         iLagiRegla();
         fxSpurning.setText(this.spurning);
 
-        // bættir action við í lagi takka
+        // bætir action við í lagi takka
         Button haettaVidTakki = (Button) this.getDialogPane().lookupButton(fxHaettaVid);
         haettaVidTakki.setOnAction(e -> onHaettaVid());
     }
@@ -77,9 +77,35 @@ public class SvarDialogController extends Dialog<String> {
     protected void onSvar()
     throws IllegalArgumentException {
         try {
+            this.spurning = (String) fxSpurning.getText();
             this.svar = (String) fxSvar.getText();
-            // Birtir endurgjöf fyrir svar notanda
-            // fxFeedback.setText(FeedbackService.provideFeedback(this.svar));
+
+            fxFeedback.setText("Sæki endurgjöf...");
+
+            Task<String> faEndurgjofTask = new Task<>() {
+                @Override
+                protected String call() throws InterruptedException {
+                    // Sækir endurgjöf
+                    return spurningar.faEndurgjof(spurning, svar);
+                }
+            };
+
+            // Þegar endurgjöfin er komin
+            faEndurgjofTask.setOnSucceeded(workerStateEvent -> {
+                // Birtir endurgjöfina í viðmóti
+                fxFeedback.setText(faEndurgjofTask.getValue());
+            });
+
+            // Villumeðhöndlun fyrir taskið
+            faEndurgjofTask.setOnFailed(workerStateEvent -> {
+                fxFeedback.setText("Villa: Endurgjöf mistókst.");
+                faEndurgjofTask.getException().printStackTrace();
+            });
+
+            // Keyrir taskið í bakgrunnsþræði
+            Thread backgroundThread = new Thread(faEndurgjofTask);
+            backgroundThread.setDaemon(true);
+            backgroundThread.start();
 
         } catch (IllegalArgumentException e) {
             System.out.println("Ólöglegt inntak! " + e.getMessage());

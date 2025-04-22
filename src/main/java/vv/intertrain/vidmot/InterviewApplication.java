@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import vv.intertrain.vinnsla.InterviewBot;
+import vv.intertrain.vinnsla.Spurningar;
 
 import java.io.IOException;
 
@@ -17,13 +18,14 @@ import java.io.IOException;
 
 public class InterviewApplication extends Application {
     public static InterviewBot interview;
+    public static Spurningar spurningar;
     /**
      * Ræsir notendaviðmótið í glugga stage
      * @param stage glugginn
      */
     @Override
     public void start(Stage stage) {
-        Scene s = new Scene (new Pane(), 600, 600);
+        Scene s = new Scene (new Pane(), 720, 720);
         ViewSwitcher.setScene(s);
         ViewSwitcher.switchTo(View.VELKOMINN, true);
         stage.setTitle("InterTrain");

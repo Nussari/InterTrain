@@ -1,28 +1,21 @@
 package vv.intertrain.vidmot;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import vv.intertrain.vinnsla.ChatMode;
-import vv.intertrain.vinnsla.InterviewBot;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import vv.intertrain.vinnsla.InterviewPreparer;
-// import vv.intertrain.vinnsla.InterviewPreparer;
-// import vinnsla.Spurningar;
-
-import static vv.intertrain.vidmot.InterviewApplication.interview;
+import vv.intertrain.vinnsla.Spurningar;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import static vv.intertrain.vidmot.InterviewApplication.spurningar;
 
 public class UndirbuaController {
     @FXML
@@ -33,15 +26,13 @@ public class UndirbuaController {
     private ListView<String> fxSpurningar;
     @FXML
     private TextArea fxSpurningaLog;
-
-    //private InterviewPreparer interviewPreparer;
+    @FXML
+    private Label fxLoading;
 
     private String valinnFlokkur;
     private String valinSpurning;
-    // private Spurningar spurningar;
     private final ObservableList<String> spurningaLog = FXCollections.observableArrayList();
     private final StringProperty spurningaLogProperty = new SimpleStringProperty("");
-    private InterviewPreparer interviewPreparer;
 
     @FXML
     protected void onSvara() {
@@ -54,8 +45,8 @@ public class UndirbuaController {
 
         if (svar != null && !svar.isEmpty()) { // ef notandi svaraði
             // hækkar fjölda svara um 1
-            //int fjoldi = Integer.parseInt(spurningar.getFjoldiSvaradraSpurninga());
-            //spurningar.setFjoldiSvaradraSpurninga(String.valueOf(++fjoldi));
+            int fjoldi = Integer.parseInt(spurningar.getFjoldiSvaradraSpurninga());
+            spurningar.setFjoldiSvaradraSpurninga(String.valueOf(++fjoldi));
             // bætir spurningu í log
             spurningaLog.add(valinSpurning);
             updateSpurningaLog();
@@ -95,50 +86,68 @@ public class UndirbuaController {
         spurningaLogProperty.set(logText);
     }
 
-    public void initialize() {
+    public void initialize() throws InterruptedException {
 
-        String nafn = ChatboxController.getNafn();
         String starf = ChatboxController.getStarf();
         String fyrirtaeki = ChatboxController.getFyrirtaeki();
 
-        interview = new InterviewBot(nafn, fyrirtaeki, starf, 10, ChatMode.PREPARATION);
+        // Býr til nýtt task
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                List<String> hopar = List.of("Tæknilegt", "Samskipti", "Hópavinna", "Lausnamiðun");
+                spurningar = new Spurningar(starf, fyrirtaeki, hopar);
 
+                // Sækir flokka
+                ObservableList<String> flokkar = spurningar.getFlokkar();
 
-        this.interviewPreparer = new InterviewPreparer(starf, fyrirtaeki, 3);
+                // Uppfærir viðmót
+                Platform.runLater(() -> {
+                    fxLoading.setText("");
+                    fxFlokkar.setItems(flokkar);
+                });
 
-        List<String> groups = List.of("Tæknilegar", "Samskipta");
+                Platform.runLater(() -> {
+                    fxFjoldiSvara.setText(spurningar.getFjoldiSvaradraSpurningaProperty().get());
+                });
 
-        this.questions = interviewpreparer.requestQuestions(starf, fyrirtaeki, groups);
-
-        try {
-            //String test = interviewPreparer.requestQuestions();
-            //System.out.println(test);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        // bindur fjölda svara við viðmótshlut
-        // fxFjoldiSvara.textProperty().bind(spurningar.getFjoldiSvaradraSpurningaProperty());
-        // bindur spurningalog við viðmótshlut
-        fxSpurningaLog.textProperty().bind(spurningaLogProperty);
-
-        //fxFlokkar.setItems(spurningar.getFlokkar());
-
-        // if (!spurningar.getFlokkar().isEmpty()) {
-            updateValinnFlokkur();
-        }
-
-        /*
-        fxFlokkar.getSelectionModel().selectedIndexProperty().addListener((obs, old, newIndex) -> {
-            if (newIndex != null && newIndex.intValue() > -1) {
-                updateValinnFlokkur();
-
-                Map<String, ObservableList<String>> spurningaListi = spurningar.getSpurningaListi(this.getValinnFlokkur());
-                fxSpurningar.setItems(spurningaListi.get(this.getValinnFlokkur()));
-                fxSpurningar.getSelectionModel().selectFirst();
-                updateValinSpurning();
+                return null;
             }
+        };
+
+        task.setOnSucceeded(event -> {
+            // Bindur hluti eftir að taskið klárar
+            fxFjoldiSvara.textProperty().bind(spurningar.getFjoldiSvaradraSpurningaProperty());
+            fxSpurningaLog.textProperty().bind(spurningaLogProperty);
+
+            // Bindur flokka við viðmótshlut
+            fxFlokkar.setItems(spurningar.getFlokkar());
+
+            if (!spurningar.getFlokkar().isEmpty()) {
+                updateValinnFlokkur();
+            }
+
+            fxFlokkar.getSelectionModel().selectedIndexProperty().addListener((obs, old, newIndex) -> {
+                if (newIndex != null && newIndex.intValue() > -1) {
+                    updateValinnFlokkur();
+
+                    Map<String, ObservableList<String>> spurningaListi = spurningar.getSpurningaListi();
+                    fxSpurningar.setItems(spurningaListi.get(this.getValinnFlokkur()));
+                    fxSpurningar.getSelectionModel().selectFirst();
+                    updateValinSpurning();
+                }
+            });
         });
-        */
+
+        // Listener fyrir villur
+        task.setOnFailed(event -> {
+            Throwable exception = task.getException();
+            exception.printStackTrace();
+        });
+
+        // Keyrir taskið í nýjum þræði
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
 }

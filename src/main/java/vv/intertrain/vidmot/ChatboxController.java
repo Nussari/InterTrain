@@ -43,7 +43,7 @@ public class ChatboxController {
         skilabod.getChildren().add(hledsluSkilabod);
     }
 
-    public void fyrstuSkilabod(String texti){
+    public void fyrstuSkilabod(String texti) {
         // Tek burt textann sem segir að sé verið að hlaða
         if (hledsluSkilabod != null && skilabod.getChildren().contains(hledsluSkilabod)) {
             skilabod.getChildren().remove(hledsluSkilabod);
@@ -81,7 +81,7 @@ public class ChatboxController {
 
             // Sendir síðustu skilaboðin aftur þegar notandi ýtir á resend takka
             retryTakki.setOnAction(e -> {
-                skilabod.getChildren().remove(container); // þegar smellt er á takka eyði hann skilaboðinu
+                skilabod.getChildren().remove(container); // þegar smellt er á takka eyðir hann skilaboðinu
                 try {
                     String svar = interview.resendLast();
                     nySkilabod(svar, false);

@@ -12,8 +12,6 @@ public class VidtalController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
 
-    private InterviewBot interview;
-
     @FXML
     public void initialize() throws Exception {
         String nafn = ChatboxController.getNafn();

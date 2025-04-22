@@ -1,4 +1,7 @@
 package vv.intertrain.vinnsla;
+import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import vv.intertrain.vinnsla.com.logaritex.ai.api.AssistantApi;
 import vv.intertrain.vinnsla.com.logaritex.ai.api.Data.Assistant;
 import vv.intertrain.vinnsla.com.logaritex.ai.api.Data;
@@ -7,10 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-
 
 public class InterviewPreparer {
 
@@ -22,8 +26,6 @@ public class InterviewPreparer {
     private final Assistant assistant;
 
     private final Assistant feedbackAssistant;
-    private final Data.Thread thread;
-    private final Data.Thread feedbackThread;
 
     public InterviewPreparer() {
 
@@ -34,18 +36,23 @@ public class InterviewPreparer {
             System.exit(1);
         }
 
+        // Retrieves a question assistant and a feedback assistant
         this.assistantApi = new AssistantApi(apiKey);
+
+        // Assistant for getting interview questions
         this.assistant = assistantApi.retrieveAssistant(ASSISTANT_ID);
+
+        // Assistant for feedback for each question
         this.feedbackAssistant = assistantApi.retrieveAssistant(FEEDBACK_ASSISTANT_ID);
-        this.thread = assistantApi.createThread(new ThreadRequest());
-        this.feedbackThread = assistantApi.createThread(new ThreadRequest());
     }
 
-    public String requestQuestions(String jobTitle, String workplace, List<String> groups) throws InterruptedException {
+    public Map<String, ObservableList<String>> requestQuestions(String jobTitle, String workplace, List<String> groups) throws InterruptedException {
         // Convert the list of groups to a JSON array string
         String groupsJson = groups.stream()
                 .map(g -> "\"" + g + "\"")
                 .collect(Collectors.joining(", "));
+
+        Data.Thread thread = assistantApi.createThread(new ThreadRequest());
 
         // Build the JSON string dynamically
         String messageContent = String.format("""
@@ -77,50 +84,48 @@ public class InterviewPreparer {
         List<Data.Message> assistantMessages = messages.data().stream()
                 .filter(msg -> msg.role() == Data.Role.assistant).toList();
 
-        Data.DataList<Data.Message> newMessages = assistantApi.listMessages(new Data.ListRequest(), thread.id());
-
-        return extractGroupsFromMessages(newMessages);
+        return convertMessagesToMap(assistantMessages);
     }
 
-    public String extractGroupsFromMessages(Data.DataList<Data.Message> messages) {
+    public Map<String, ObservableList<String>> convertMessagesToMap(List<Data.Message> assistantMessages) {
+        Map<String, ObservableList<String>> resultMap = new HashMap<>();
+
         try {
-            // Filter assistant messages
-            List<Data.Message> assistantMessages = messages.data().stream()
-                    .filter(msg -> msg.role() == Data.Role.assistant)
-                    .toList();
+            for (Data.Message message : assistantMessages) {
+                // Assuming the message content is a JSON structure or similar key-value format
+                String contentJson = message.content().get(0).text().value(); // Adjust based on actual structure
 
-            if (assistantMessages.isEmpty()) {
-                return "No assistant messages found.";
+                // Parse the content (assuming it's in JSON format) - You'll likely use Jackson or Gson for this
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode rootNode = mapper.readTree(contentJson);
+
+                // Extract key-value pairs from the content
+                JsonNode groupsNode = rootNode.get("groups");
+
+                if (groupsNode != null && groupsNode.isObject()) {
+                    groupsNode.fields().forEachRemaining(entry -> {
+                        String group = entry.getKey();
+                        List<String> questions = new ArrayList<>();
+                        entry.getValue().forEach(questionNode -> questions.add(questionNode.asText()));
+
+                        // Convert the List<String> to ObservableList<String>
+                        ObservableList<String> observableQuestions = FXCollections.observableArrayList(questions);
+
+                        // Put the result in the map
+                        resultMap.put(group, observableQuestions);
+                    });
+                }
             }
-
-            // Get the first assistant message's content (assuming it's text-based)
-            String contentJson = assistantMessages.get(0)
-                    .content()
-                    .get(0)
-                    .text()
-                    .value(); // Adjust this if the structure is different
-
-            // Parse the JSON
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(contentJson);
-
-            // Extract the "groups" field
-            JsonNode groupsNode = rootNode.get("groups");
-
-            if (groupsNode == null) {
-                return "No 'groups' field found in assistant message.";
-            }
-
-            // Return it as a pretty JSON string
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(groupsNode);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error parsing assistant message.";
         }
+
+        return resultMap;
     }
 
-
+    // Takes in the question and the user's answer
+    // Returns the AI's feedback for the user's answer to the question as a String
     public String requestFeedback(String question, String answer) throws InterruptedException {
         // Build the JSON string dynamically
         String messageContent = String.format("""
@@ -129,6 +134,8 @@ public class InterviewPreparer {
                     "answer": "%s"
                 }
                 """, question, answer);
+
+        Data.Thread feedbackThread = assistantApi.createThread(new ThreadRequest());
 
         assistantApi.createMessage(new Data.MessageRequest(
                         Data.Role.user, // user created message.
@@ -151,17 +158,14 @@ public class InterviewPreparer {
         List<Data.Message> assistantMessages = messages.data().stream()
                 .filter(msg -> msg.role() == Data.Role.assistant).toList();
 
-        return assistantMessages.toString();
+        return assistantMessages.getFirst().content().getFirst().text().value();
     }
-
 
     public static void main(String[] args) throws InterruptedException {
         InterviewPreparer ai = new InterviewPreparer();
 
-        List<String> groups = List.of("Technical", "Communication");
+        List<String> groups = List.of("Technical", "Communication", "Teamwork", "Problem solving");
 
-        System.out.println(ai.requestQuestions("Byggingaverkfræðingur", "Trade Info", groups));
-
-        System.out.println(ai.requestFeedback("How good are you at Excel", "Pretty good"));
+        System.out.println(ai.requestQuestions("Byggingaverkfræðingur", "EFLA", groups));
     }
 }
