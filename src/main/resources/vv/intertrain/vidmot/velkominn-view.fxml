@@ -32,7 +32,7 @@
     <HBox alignment="CENTER" prefHeight="1.0" prefWidth="430.0" spacing="20">
         <Button fx:id="undirbua" disable="true" onAction="#onUndirbua" text="Undirbúa fyrir viðtal" />
 
-        <Button fx:id="aefa" disable="true" onAction="#onAefa" text="Æfingar viðtal" />
+        <Button fx:id="aefa" disable="true" onAction="#onAefa" text="Æfingaviðtal" />
 
         <Button onAction="#onKvedja" text="Hætta" />
     </HBox>

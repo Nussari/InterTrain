@@ -10,12 +10,14 @@ public class GeminiChatSession {
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     private final String apiKey;
     private final List<Map<String, String>> conversationHistory;
-    private final ExecutorService executor;
+    //private final ExecutorService executor;
+    private String lastUserMessage;
 
     public GeminiChatSession(String apiKey) {
         this.apiKey = apiKey;
         this.conversationHistory = new ArrayList<>();
-        this.executor = Executors.newFixedThreadPool(1);
+        //this.executor = Executors.newFixedThreadPool(1);
+        this.lastUserMessage = "";
     }
 
     /**
@@ -30,8 +32,10 @@ public class GeminiChatSession {
             throw new IllegalArgumentException("Message cannot be empty");
         }
 
+        lastUserMessage = userMessage.trim();
+
         // Add user message to history
-        addMessage("user", userMessage.trim());
+        addMessage("user", lastUserMessage);
 
         // Get AI response
         String aiResponse = sendRequest(buildRequest());
@@ -39,7 +43,22 @@ public class GeminiChatSession {
         // Add AI response to history
         addMessage("model", aiResponse);
 
+
         return aiResponse;
+    }
+
+    public String resendLastMessage() throws Exception {
+        String userMessage = this.getLastUserMessage();
+
+        // Removes the user's and model's latest message from the history
+        popLastMessagePair();
+
+        // Resends the user's message
+        return sendAndReceiveMsg(userMessage);
+    }
+
+    public String getLastUserMessage() {
+        return this.lastUserMessage;
     }
 
     private String buildRequest() {
@@ -118,6 +137,22 @@ public class GeminiChatSession {
                 "content", content
         ));
     }
+
+    public void popLastMessagePair() {
+        if (conversationHistory.isEmpty()) {
+            System.err.println("Conversation list is empty");
+        }
+
+        // Removes the users's latest message
+        conversationHistory.removeLast();
+
+        // Updates the user's latest message to the older one
+        this.lastUserMessage = conversationHistory.getLast().get("content");
+
+        // Removes the model's latest response
+        conversationHistory.removeLast();
+    }
+
 
     private String escapeJson(String input) {
         return input.replace("\\", "\\\\")

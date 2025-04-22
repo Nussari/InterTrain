@@ -6,11 +6,11 @@ import javafx.scene.control.TextField;
 import vv.intertrain.vinnsla.ChatMode;
 import vv.intertrain.vinnsla.InterviewBot;
 
+import static vv.intertrain.vidmot.InterviewApplication.interview;
+
 public class VidtalController {
     @FXML private ChatboxController chatBoxController;
     @FXML private TextField inntak;
-
-    private InterviewBot interview;
 
     @FXML
     public void initialize() throws Exception {
@@ -73,7 +73,6 @@ public class VidtalController {
 
     public void onEndurstilla() throws Exception {
         chatBoxController.clear();
-
         initialize();
     }
 

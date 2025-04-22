@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import static vv.intertrain.vidmot.InterviewApplication.interview;
 
 /******************************************************************************
  *  Nafn    : Viktor Andri Hermannsson
@@ -42,7 +43,7 @@ public class ChatboxController {
         skilabod.getChildren().add(hledsluSkilabod);
     }
 
-    public void fyrstuSkilabod(String texti){
+    public void fyrstuSkilabod(String texti) {
         // Tek burt textann sem segir að sé verið að hlaða
         if (hledsluSkilabod != null && skilabod.getChildren().contains(hledsluSkilabod)) {
             skilabod.getChildren().remove(hledsluSkilabod);
@@ -77,10 +78,17 @@ public class ChatboxController {
         if (!notandi) { // set "Reyna aftur" takka við hliðina á búbblu
             Button retryTakki = new Button("Reyna aftur");
             retryTakki.getStyleClass().add("retry-takki");
+
+            // Sendir síðustu skilaboðin aftur þegar notandi ýtir á resend takka
             retryTakki.setOnAction(e -> {
-                skilabod.getChildren().remove(container); // þegar smellt er á takka eyði hann skilaboðinu
-                // BREYTA ÞESSU ÞEGAR Í KALL Á GERVIGREIND ÞEGAR HÚN ER KOMIN
-                nySkilabod("endurreynt", false);
+                skilabod.getChildren().remove(container); // þegar smellt er á takka eyðir hann skilaboðinu
+                try {
+                    String svar = interview.resendLast();
+                    nySkilabod(svar, false);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
             });
             container.getChildren().add(retryTakki);
         }

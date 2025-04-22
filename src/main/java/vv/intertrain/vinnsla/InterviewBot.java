@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InterviewBot {
 
-
     // Config
     private static final int DEFAULT_MAX_QUESTIONS = 10;
     private final int MAX_QUESTIONS;
@@ -33,7 +32,7 @@ public class InterviewBot {
         String apiKey = System.getenv("GEMINI_KEY");
 
         if (apiKey == null || apiKey.isEmpty()) {
-            System.err.println("Missing API_KEY environment variable");
+            System.err.println("Missing GEMINI_KEY environment variable");
             System.exit(1);
         }
 
@@ -65,9 +64,6 @@ public class InterviewBot {
     }
 
     private String createInitialPrompt() {
-        System.out.println("Nafn: " + this.name);
-        System.out.println("Fyrirtæki: " + this.company);
-        System.out.println("Starfsheiti: " + this.jobTitle);
         if (this.mode == ChatMode.PREPARATION) {
             System.out.println("Preparation mode");
             return String.format(
@@ -140,6 +136,10 @@ public class InterviewBot {
 
         // Sends the user's message and returns the interviewers response/next question
         return chatSession.sendAndReceiveMsg(message);
+    }
+
+    public String resendLast() throws Exception {
+        return chatSession.resendLastMessage();
     }
 
     public boolean getIsActive() {

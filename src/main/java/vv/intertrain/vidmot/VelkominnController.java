@@ -42,25 +42,25 @@ public class VelkominnController {
     }
 
     /**
-     * Skiptir yfir í spurningaviðmótið
+     * Skiptir yfir í viðtalsviðmótið
      */
     public void onAefa(ActionEvent ignored) {
         ChatboxController.setNafn(nafn.getText());
         ChatboxController.setStarf(starf.getText());
         ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
 
-        ViewSwitcher.switchTo(View.VIDTAL, true);
+        ViewSwitcher.switchTo(View.VIDTAL, false);
     }
 
     /**
-     * BREYTA ÞEGAR UNDIRBUNINGS SIÐA KEMUR
+     * Skiptir yfir í undirbúningsviðmótið (æfingaspurningar)
      */
     public void onUndirbua(ActionEvent ignored) {
         ChatboxController.setNafn(nafn.getText());
         ChatboxController.setStarf(starf.getText());
         ChatboxController.setFyrirtaeki(fyrirtaeki.getText());
 
-        ViewSwitcher.switchTo(View.UNDIRBUA, true);
+        ViewSwitcher.switchTo(View.UNDIRBUA, false);
     }
 
     /**
